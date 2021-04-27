@@ -1,0 +1,432 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xml:lang="fr" lang="fr">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+<!-------------------------------------------LIEN VERS LA FEUILLE DE STYLE---------------------------------------------------------!-->	
+  
+		<LINK rel="stylesheet" href="style.css" type="text/css">
+
+<!-------------------------------------------DEPENDANCES SCRIPTS/THREE.JS---------------------------------------------------------!-->
+		
+		<script src="./three.js/build/three.js"></script>
+		<script src="./three.js/build/three.min.js"></script>
+		<script src="./three.js/examples/js/renderers/Projector.js"></script>
+		<script src="./three.js/examples/js/loaders/DDSLoader.js"></script>
+		<script src="./three.js/examples/js/loaders/MTLLoader.js"></script>
+		<script src="./three.js/examples/js/controls/OrbitControls.js"></script>
+		<script src="./three.js/examples/js/Detector.js"></script>
+		<script src="./three.js/examples/js/controls/PointerLockControls.js"></script>	
+		<script src="./three.js/examples/js/libs/stats.min.js"></script>
+		<script src="./three.js/examples/js/loaders/TGALoader.js"></script>
+		<script src="./three.js/examples/js/controls/TrackballControls.js"></script>
+		<script src="./three.js/examples/js/loaders/OBJMTLLoader.js"></script>
+		<script src="./three.js/examples/js/controls/FirstPersonControls.js"></script>
+
+		<script src="./three.js/examples/js/ImprovedNoise.js"></script>
+		<script src="./jquery-1.7.1.min.js"></script>
+		<script src="ajax.js"></script>
+		<script src='ajax_2.js'></script>		
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		
+<!-------------------------------------------FONCTIONS MONTRER/CACHER MENUS---------------------------------------------------------!-->
+
+<script>
+var objects = [] ;
+
+// Cette première fonction concerne le menu de visualisation des informations sémantiques au survol. Lorsque l'on clique sur l'icone masquer, on 'plie' ou 'déplie' de menu.
+
+function show(menu){ 							//lorsque l'on clique sur l'icone masquer
+         if(document.getElementById("menu").style.display == "none") {	// si le menu n'est pas affiché
+   	 document.getElementById("menu").style.display = "block"; 	// alors afficher le menu
+	 }
+  	 else	{							//sinon
+   	 document.getElementById("menu").style.display = "none";	// masquer le menu
+	 }
+}
+</script>
+
+<script> 
+
+// Cette fonction est la même que la précédente mais concerne le menu latéral de visualisation des objets
+ 
+function show1(menuprinc){								//lorsque l'on clique sur l'icone dérouler
+         if(document.getElementById("menuprinc").style.display == "none"){		//si le menu principal n'est pas visible
+   	     	document.getElementById("menuprinc").style.display = "block";		//alors afficher le menu pricipal
+		 	document.getElementById("derouler").style.right="210px";	//règlage de la marge à droite pour l'affichage
+	 	 }
+ 	 	 else{									//sinon
+     	 	document.getElementById("menuprinc").style.display = "none";		//cacher le menu
+			document.getElementById("derouler").style.right="23px";		//règlage de la marge à droite
+	 	 }
+}	
+
+</script>
+
+
+
+<!----------------------------------AFFICHAGE DES OBJETS EN FONCTION DU MODE DE VISUALISATION-----------------------------------------!-->
+
+
+<!-- Vérification de la checkbox/affichage du mode de visualisation à l'utilisateur !-->
+
+<script>
+
+var objects = [];
+var loader = new THREE.OBJMTLLoader();	
+			
+function check(){										//fonction qui vérifie l'état de la checkbox (libre/temps)
+	if(checkbox.checked){									//si cochée
+		document.getElementById("text").value= "Visualisation temporelle";		//afficher "Visualisation temporelle"
+		for (var j in objects){								//pour i parcourant le tableau objects (matrice obj 3D)
+			scene.remove(objects[j]);						//supprimer l'objet n°j de la scène
+			objects.splice(j,1);							//supprimer son nom dans le tableau
+		}
+	}
+	else{																		//sinon
+		for (var j in objects){								//pour j parcourant le tableau objects
+			scene.remove(objects[j]);						//supprimer l'objet n°j de la scène
+			objects.splice(j,1);							//supprimer son nom dans le tableau
+		}
+		document.getElementById("text").value= "Visualisation libre";			//afficher "Visualisation libre"
+	}
+}																				//fin de la fonction check()
+	
+//------ Barre de chargement de l'objet qui affiche le % à l'utilisateur ------//
+
+THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );					//chargement de la fonction loader de three.js									
+var onProgress = function ( xhr ) {								//définition de la variable onProgress comme une fonction 
+	if ( xhr.lengthComputable ) {								//s'il y a un chargement
+		var percentComplete = xhr.loaded / xhr.total * 100;				//définition de la variable percentComplete
+		var percent = Math.round(percentComplete, 2) + '% downloaded';			//définition de la variable percent comme chaîne de caractère
+		console.log(percent);
+		
+		if (percent === "100% downloaded"){
+		document.getElementById("loading").style.display = "none";
+		}
+		else{
+		document.getElementById("loading").style.display = "block";
+		}
+
+		document.getElementById("percent").innerHTML = percent;				//afficher le % effectué dans le div "loading"
+	}
+};
+var onError = function ( xhr ) {								//définition de la variable onError
+	document.getElementById("percent").innerHTML = "Erreur de chargement";			//si erreur lors du chargement alors le dire à l'utilisateur
+};
+
+
+function generateButtonCallback( url_elem, url2 ) {							//fonction exécutée au clic sur un subbutton; url_elem = nom objet
+	return function ( event ) {								//exécution immédiate de la fonction 
+
+		console.log(document.getElementById(url2).children);
+		var menu_princ = document.getElementById(url2).children;
+		
+		var arr = [].slice.call(menu_princ);
+		
+			for (m in arr){
+				var select = arr[m].firstChild.id;	//création de la variable select qui accomplit la condition
+				console.log(select);
+				console.log(url_elem);
+				if (select === url_elem){
+					if (document.getElementById(select).style.backgroundColor == "rgba(0, 255, 255, 0.7)"){ //si la couleur du fond d'écran est déjà changée
+						document.getElementById(select).style.backgroundColor = "transparent";	//alors remettre le fond en transparent (=déselection)
+					}
+					else{		//sinon		
+						document.getElementById(select).style.backgroundColor = "rgba(0, 255, 255, 0.7)"; //changer la couleur du fond
+						
+					}
+				}
+			}
+
+
+
+		loadObj( url_elem );								//exécution de la fonction loadobj() qui affiche les objets
+	}
+}
+
+//------ Série de fonctions qui gèrent la génération du menu et l'affichage des objets de manière conditionnelle ------//
+
+
+function loadObj( url_elem ) {								//fonction qui affiche les objets à l'écran
+	if(checkbox.checked){								//si on est en visualisation temporelle
+		var date = parseInt(document.getElementById("button_select").value);	//on récupère la date de construction de l'objet cliqué
+		for (var i in DATE_CONS){						//pour i parcourant toutes les dates de construction 
+			if (parseInt(DATE_CONS[i])<=date && parseInt(DATE_DES[i])>=date) {  //si la date de construction de l'objet à afficher est comprise entre les dates de construction et destruction de l'objet i
+//					console.log(objects);
+				var load_obj = OBJETS[i]; 				//la variable load_obj prend le nom de l'objet i
+				var check = "";						//la variable check est initialisée à null
+						if (check != "removed") {		//si la variable check est différente de "removed"
+							loader.load( './Donnees/OBJ/'+load_obj+'.obj','./Donnees/OBJ/'+load_obj+'.mtl', function ( object ) { //charger l'objet load_obj .obj et sa texture .mtl
+								console.log(object);
+								object.name=load_obj;		//on donne un nom qui sera dans les attributs  	
+								objects.push(object);		//on 'pousse' l'objet à la fin du tableau
+								scene.add( object );		//on ajoute l'objet à la scène		
+							}, onProgress, onError );		//on affiche les % de chargement et l'erreur si elle survient
+						}
+			}
+			else{ 								//sinon (si check = "removed")
+				var remove_obj = OBJETS[i];				//la variable remove_obj prend le nom de l'objet i
+		//		console.log(remove_obj);
+				for (var j in objects){					//pour j parcourant le tableau des objets 
+					if (objects[j].name === remove_obj){		//si le nom de l'objet j de la table est égal au nom de l'objet actuellement sélectionné
+						scene.remove(objects[j]);		//on supprime l'objet de la scène
+						objects.splice(j,1);			//on supprime le nom de l'objet du tableau
+					}
+				}
+			}
+		}
+	}
+	else{										//sinon (si la checkbox n'est pas cochée -> visualisation libre)
+		var check = "";								//variable check initialisée à null
+		for (var j in objects){							//pour j parcourant le tableau des objets 
+			if (objects[j].name === url_elem){				//si le nom de l'objet j est égal au nom de l'élément sélectionné
+				scene.remove(objects[j])				//supprimer l'objet j de la scène
+				objects.splice(j,1);					//supprimer l'objet du tableau objects
+				check = "removed";					//attribuer la valeur "removed" à check
+			}
+		}
+		if (check != "removed") {						//si check est différent de "removed"
+			loader.load( './Donnees/OBJ/'+url_elem+'.obj','./Donnees/OBJ/'+url_elem+'.mtl', function ( object ) { //charger l'objet url_elem (transmis par la fonction) .obj et sa texture .mtl
+				object.name=url_elem;					//on attribue un nom à l'objet
+				objects.push(object);					//on "pousse" l'objet dans le taleau des objets			
+				scene.remove(object);					//on supprime l'objet de la scène pour se prémunir des superpositions
+				scene.add( object );					//on ajoute l'objet
+				console.log(objects);
+			}, onProgress, onError );					//on affiche les % de chargement et l'erreur si elle survient
+
+		}										//fin du if check différent de "removed"		
+	}											//fin du else si visualisation libre
+}												//fin de la fonction load_obj
+
+//------ Fonction qui génère les boutons principaux du menu (colonne menu de la bdd) ------//
+
+function generateButton( url,url2,i) { //fonction qui transmet url=date de construction de l'objet sélectionné, url2=chaine"objet"+n°i,i l'indice de l'objet sélectionné dans le tableau des DATES
+	return function ( event ) {			//exécute immédiatment la fonction
+		var arr = [].slice.call(document.getElementById( "liste_dates").children);	//création d'un tableau contenant les éléments de la sélection
+		
+		console.log(arr)
+			for (m in arr){				//pour m parcourant le tableau
+			var select = arr[m].firstChild.id;	//création de la variable select qui accomplit la condition
+				if (select == url){ //si l'élément sélectionné correspond au mième élément du tableau
+					
+					if (document.getElementById(select).style.backgroundColor == "rgba(0, 255, 255, 0.5)"){ //si la couleur du fond d'écran est déjà changée
+						document.getElementById(select).style.backgroundColor = "transparent";	//alors remettre le fond en transparent (=déselection)
+					}
+					else{		//sinon		
+						document.getElementById(select).style.backgroundColor = "rgba(0, 255, 255, 0.5)"; //changer la couleur du fond
+						
+					}
+				}
+			}
+
+		createSubMenu( url,url2,i); //création du sous menu contenant les objets
+	}
+}
+
+function createMenu(DATES) {							//création du menu principal des dates
+	for ( var i in DATES ) {						//pour i parcourant le tableau des dates uniques (colonne menu)
+		var button = document.createElement( 'button' );		//création d'un bouton
+		var url =  DATES[i] ;						//création de la variable url=ième date du tableau
+		var url2 = "objets"+i;						//création de url2 = objet+indice i (ex objets1,objets2...)
+		var liste_dates = document.createElement('li');			//création de liste_dates comme un menu html
+		var liste_elem = document.createElement('ul')			//création de liste_elem comme un sous menu html
+		button.innerHTML = url;						//texte qui apparait sur le bouton
+		button.id = url;
+		liste_dates.id = url;						//affectation d'un identifiant à liste_dates (nom du menu)
+		liste_elem.id = url2						//affectation d'un identifiant à liste_elem (nom du sous menu)
+		liste_dates.appendChild( button );				//ajout du bouton à liste_dates
+		document.getElementById( "liste_dates").appendChild(liste_dates); //ajout de la liste des boutons au div liste_dates
+		liste_dates.appendChild(liste_elem);					//ajout du menu liste_elem au menu liste_dates
+//					console.log(DATE_DES);
+//			 		console.log(DATE_CONS);
+//					console.log(OBJETS);
+		button.addEventListener( 'click', generateButton( url,url2,i ), false ); //création d'un 'surveilleur' qui guette le clic sur un bouton date et qui, si cela se produit, déclenchera la fonction generateButton()	
+	}
+}
+
+function createSubMenu(url,url2,i) {				//fonction qui créée le sous menu des objets
+	var check = "";						//initialisation de la variable check à null
+	var ELEMENTS = eval("ELEMENTS_"+i);			//définition de la varaible ELEMENTS comme chaine de caractère ELEMENTS_i (ELEMENT_1,ELEMENT_2...) -> référence aux tableaux définis par php (liens.php)
+	var ELEMENTSDATE = eval("ELEMENTSDATES_"+i);		//définition de la variable ELEMENTSDATES sur le même princpe ->référence aux tableaux définis dans liens.php
+	var menu = eval("objets" + i);				//définition de la variable menu sur le même principe -> référence au nom du menu supérieur
+	var arr = [].slice.call(menu.children);			//définition de la variable arr qui stocke tous les éléments de menu
+		for ( var n in arr ){				//pour n parcourant arr
+			if (menu.id === url2) {			//si le sous-menu est déjà affiché 
+				menu.removeChild (arr[n]);	//supprimer le sous-menu
+				scene.remove(arr[n]);		//supprimer les objets de la scène
+				
+			}
+			var check='removed';			//valeur "removed" affectée à check
+		}
+			if (check!='removed'){			//si check est différent de 'removed'
+				for ( var m in ELEMENTS ) {	//pour m parcourant le tableau ELEMENTS (qui correspond au tableau contenant les objets constuits à la date sélectionnée)
+					var subbutton = document.createElement( 'subbutton' );		//créer un sous bouton
+					var datecons = ELEMENTSDATE[m];					//varaible définissant la date de construction de l'élément m
+					var url_elem =  ELEMENTS[m] ;					//variable définissant la variable url_elem comme la mième occurence du tableau ELEMENTS
+					var liste_elements = document.createElement('li');		//création d'un sous-menu liste_elements
+					
+					document.getElementById("info").innerHTML = url + url_elem;	//Affichage dans le div info de la date+nom élément
+					subbutton.id = url_elem;
+					subbutton.innerHTML = url_elem;					//affichage du nom de l'objet sur le bouton	
+					document.getElementById("button_select").value = datecons;	//affichage de la date de construction de l'objet dans le champ caché button_select
+					liste_elements.appendChild( subbutton );			//ajout du sous bouton au menu liste_elements
+					menu.appendChild(liste_elements);				//ajout du menu liste_elements au menu
+					subbutton.addEventListener( 'click', generateButtonCallback( url_elem,url2 ), false );  //création d'un 'surveilleur' qui féclenche la fonction 'generateButtonCallback' au clic sur un élément. 
+				}
+			}
+
+}
+</script>
+
+<!------------------------DESACTIVATION DE LA CAMERA LORSQUE L'UTILISATEUR INTERAGIT DANS LE MENU------------------------------------!-->
+
+<script>	
+		
+document.addEventListener('mouseover', onMouseOver, false);
+		
+document.getElementById('menu').onmouseover = function () {			//décelenchement de la fonction lorsque la souris survole le div menu
+	controls.enabled = false;						//la fonction désactive les controles de three.js
+};
+
+document.getElementById('menu').onmouseout = function () {			//déclenchement de la fonction lorsque la souris quitte le div menu
+	controls.enabled = true;						//la fonction active les contrôles de three.js
+};
+
+document.getElementById('menuprinc').onmouseover = function () {	//décelenchement de la fonction lorsque la souris survole le div menu
+	controls.enabled = false;						//la fonction désactive les controles de three.js
+};
+
+document.getElementById('menuprinc').onmouseout = function () {		//décelenchement de la fonction lorsque la souris survole le div menu
+	controls.enabled = true;						//la fonction active les controles de three.js
+};
+
+function help(){								//fonction qui gère l'ouverture/fermeture du menu d'aide
+	if (document.getElementById("help_map").style.display == 'none'){
+	document.getElementById("help_map").style.display = 'block';
+	}
+	else{
+	document.getElementById("help_map").style.display = 'none';
+	}
+}
+
+function close_help(){								//fonction qui ferme le menu d'aide au clic croix rouge
+	document.getElementById("help_map").style.display = 'none'
+}
+
+
+
+</script>
+
+</head>
+
+<!--------------------------------------------BLOCS D'AFFICHAGE DE LA PAGE-----------------------------------------------------------!-->
+<body >
+
+<!--------- bloc qui contient la flèche qui permet de passer de la visualisation 3D à la carte geomajas --------------->
+
+<div id="fleche_maquette">
+<img src="./3D.JPG" onclick="submitForm2()" height="50"/> <!-- le clic sur la flèche déclenche la fonction submitForm2() (ajax2.js) !-->
+</div>	
+
+<div id="fleche_carte">
+<img src="./carte.png" onclick="submitForm2()" height="50"/> <!-- le clic sur la flèche déclenche la fonction submitForm2() (ajax2.js) !-->
+</div>	
+	
+
+<!--------- bloc qui contient la carte de Geomajas lancée en localhost:8080 --------------->
+<div id="map" >
+<iframe id="frame_map" src="http://localhost:8080" > </iframe>
+	<!-- sous bloc qui contient le menu d'aide -->
+	<div id="help_map">
+	<img src="./quitter.png" onclick= "close_help()" height="15" align="right" /> <br>
+	<br>
+	<img src="./site.png" height="20"/> Sites disponibles en vue 3D ou contenant des informations <br>
+	<br>
+	<img src="./menu.png" height="20"/> Menu de calques disponibles <br>
+	<br>
+	<img src="./info.png" height="20"/> Afficher des informations sur le site <br>
+	<br>
+	<img src="./zoom_cadre.png" height="20"/> Zoom cadré <br>
+	<br>
+	<img src="./zoomplusmoins.png" height="20"/> Zoom avant/arrière <br>
+	<br>
+	<img src="./help.png" height="20"/> Ouvrir/fermer cette fenêtre <br>
+	<br>
+	<img src="./3D.JPG" height="20"/> Accéder au mode de visulalisation 3D <br>
+	</div>
+
+	<!-- sous bloc qui contient l'image d'aide -->
+	<div id="help_img">
+	<img src="./help.png" onclick="help()" height="50"/>
+	</div>	
+</div>
+
+<!--------- bloc qui contient le visualiseur 3D --------------->
+
+<div id="viewer">
+
+	<!--------- bloc nécessaire à three.js liés aux objets 3D --------------->
+	<div id="container"></div>
+
+			<!--------- bloc où s'affichent différents éléments pour l'utilisateur --------------->
+			<div id="info">
+			</div>
+		
+			<!--------- bloc caché contenant différentes informations pour le transfert de variables --------------->
+			<div id="cache">
+				<FORM action="submit.php" method='post' id='formulaire' >
+				<input type="text" name="champ_select" id="champ_select" value=""/>
+				<input type="button" id="searchForm" onclick="SubmitForm();" value="Send"  />
+				<input type="text" id="button_select" name="button_select" />
+				</FORM>	
+			</div>
+		
+			<!--------- bloc qui contient le bouton de masquage du menu --------------->
+			<div id="masquer">
+				Réduire <img src="./masquer.png" onclick="show(menu)" height="20"/>
+			</div>	
+
+			<!--------- bloc qui contient le menu --------------->
+			<div id="menu">
+			</div>
+
+			<!--------- bloc qui permet de dérouler le menu principal (à droite) --------------->
+			<div id="derouler">
+				<img src="./lat.png" onclick="show1(menuprinc)" height="20"/>
+			</div>	
+
+			<!--------- bloc qui affiche la checkbox et indique le mode de visualisation --------------->
+			<div id="checkboxdiv">
+				<input type="checkbox" id="checkbox" value="checkbox" onclick="check()" /> 
+				<input type="text" id="text" name="text" value="Visualisation libre"/>
+			</div>
+
+			<!--------- bloc menu principal où l'utilisateur sélectionne les objets --------------->
+			<div id="menuprinc">
+			</div>
+
+			<!--------- bloc qui affiche des informations dynamiques (temps chargement, objet survolé...) --------------->
+			<div id="id">
+			</div>	
+
+			<!--------- bloc qui indique le temps de chargement --------------->
+			<div id="loading">
+				<div id = "percent">
+				</div>
+				<div id=" "loader">
+				<img src="./loading.gif" height="300px"/>
+				</div>
+			</div>
+
+</div>	
+
+<!--------- appel du script de scène --------------->
+<script src="./scene.js"></script>
+
+</body>
+</html>

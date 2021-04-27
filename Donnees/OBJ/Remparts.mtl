@@ -1,0 +1,12 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl Stone_Masonry_Multi.002
+Ns 90.196078
+Ka 0.000000 0.000000 0.000000
+Kd 0.365427 0.269051 0.242949
+Ks 0.165000 0.165000 0.165000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /chateau_tex/Stone_Masonry_Multi.jpg

@@ -1,0 +1,24 @@
+CREATE TABLE "chateau_0004"
+(
+  "NomID" text NOT NULL,
+  "Titre" text,
+  "Date_Cons" integer,
+  "Date_Des" integer,
+  "Image" text,
+  "Description" text,
+  "Date_Fin_Cons" integer,
+  CONSTRAINT "chateau_0004_pkey" PRIMARY KEY ("NomID")
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "chateau_0004"
+  OWNER TO postgres;
+
+
+INSERT INTO "chateau_0004"(
+            "NomID", "Titre", "Date_Cons", "Date_Des", "Image", "Description", 
+             "Date_Fin_Cons")
+    VALUES 
+("mur","Remparts du château",,,"","",),
+("chateau","Château d'Engelbourg",,,"","",);

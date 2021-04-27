@@ -1,0 +1,23 @@
+CREATE TABLE INSA_0000
+(
+  NomID text NOT NULL,
+  Titre text,
+  Date_Cons integer,
+  Date_Fin_Cons integer,
+  Date_Des integer,
+  Description text,
+  Menu text,
+  CONSTRAINT INSA_0000_pkey PRIMARY KEY (NomID)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE INSA_0000
+  OWNER TO postgres;
+
+
+INSERT INTO INSA_0000(
+            NomID, Titre, Date_Cons,Date_Fin_Cons, Date_Des, Description,Menu)
+    VALUES 
+('table','Table du labo TOPO',null,null,null,null,'Mobilier'),
+('pilier','Pilier du labo TOPO',null,null,null,null,'Structure');

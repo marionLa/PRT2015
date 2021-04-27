@@ -1,0 +1,55 @@
+#
+## Alias OBJ Material File
+# Exported from SketchUp, (c) 2000-2012 Trimble Navigation Limited
+
+newmtl Roofing_Slate_Dark
+Ka 0.000000 0.000000 0.000000
+Kd 0.584314 0.619608 0.639216
+Ks 0.330000 0.330000 0.330000
+map_Kd cathedraleR/Roofing_Slate_Dark.jpg
+
+newmtl BackColor
+Ka 0.000000 0.000000 0.000000
+Kd 0.643137 0.698039 0.733333
+Ks 0.330000 0.330000 0.330000
+
+newmtl FrontColor
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.330000 0.330000 0.330000
+
+newmtl _9
+Ka 0.000000 0.000000 0.000000
+Kd 0.494118 0.368627 0.301961
+Ks 0.330000 0.330000 0.330000
+map_Kd cathedraleR/_9.png
+
+newmtl ForegroundColor
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.330000 0.330000 0.330000
+
+newmtl _14
+Ka 0.000000 0.000000 0.000000
+Kd 0.458824 0.439216 0.423529
+Ks 0.330000 0.330000 0.330000
+map_Kd cathedraleR/_14.jpg
+
+newmtl _19
+Ka 0.000000 0.000000 0.000000
+Kd 0.396078 0.529412 0.400000
+Ks 0.330000 0.330000 0.330000
+map_Kd cathedraleR/_19.png
+
+newmtl _5
+Ka 0.000000 0.000000 0.000000
+Kd 0.439216 0.317647 0.219608
+Ks 0.330000 0.330000 0.330000
+map_Kd cathedraleR/_5.jpg
+
+newmtl Google_Earth_Snapshot2
+Ka 0.000000 0.000000 0.000000
+Kd 0.458824 0.458824 0.458824
+Ks 0.330000 0.330000 0.330000
+map_Kd cathedraleR/Google_Earth_Snapshot2.jpg
+

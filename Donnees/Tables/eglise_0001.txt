@@ -1,0 +1,25 @@
+CREATE TABLE eglise_0001
+(
+  NomID text NOT NULL,
+  Titre text,
+  Date_Cons integer,
+  Date_Fin_Cons integer,
+  Date_Des integer,
+  Description text,
+  Menu text,
+  CONSTRAINT eglise_0001_pkey PRIMARY KEY (NomID)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE eglise_0001
+  OWNER TO postgres;
+
+
+INSERT INTO eglise_0001(
+            NomID, Titre, Date_Cons,Date_Fin_Cons, Date_Des, Description,Menu)
+    VALUES 
+('tourModerne','Tour du clocher de l''église Ste Famille',1928,null,8888,null,'Tour'),
+('tourAncienne','Ancienne tour de l''église Ste Famille',1897,null,1928,null,'Tour'),
+('eglise','Eglise Ste Famille de Schiltigheim',1897,1899,8888,null,'Corps'),
+('egliseSch','Eglise Ste Famille de Schiltigheim',1897,null,8888,null,'Actuel');

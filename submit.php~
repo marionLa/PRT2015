@@ -1,0 +1,59 @@
+<?php
+
+$selection = $_POST['selected']; 
+
+include 'connection.inc.php' ;
+$selectionbdd = pg_escape_string($_POST['selected']);
+$image = '/'.$selectionbdd.'.jpg';
+$sql=pg_query($connection,"DELETE FROM id_user ")or die ('Erreur connexion'. pg_last_error($connection));
+$sql=pg_query($connection,"INSERT INTO id_user(id_select,images) VALUES ('".$selectionbdd."', '".$image."') ")or die ('Erreur connexion'. pg_last_error($connection));
+
+
+
+$query = "SELECT name FROM selection ";
+$result = pg_query($query) or die('Échec de la requête : ' . pg_last_error());
+
+while ($row = pg_fetch_row($result)) {
+
+$resultat = $row[0];
+
+}
+
+// Exécution de la requête SQL
+$query1 = "SELECT * FROM $resultat, id_user where $resultat.nomid=id_user.id_select  ";
+
+
+$result1 = pg_query($query1) or die('Échec de la requête : ' . pg_last_error());
+
+
+
+// Affichage des résultats en HTML
+
+while ($row = pg_fetch_row($result1)) {
+
+echo '
+<p align="center">
+'.$row[1].'
+ </p>
+';
+echo '
+<p align ="center">
+<img src="./Donnees/Images'. $image .'" width="250" /> 
+</p>
+';
+
+echo "$row[5]";
+
+
+  
+}
+
+// Libère le résultat
+pg_free_result($result);
+pg_free_result($result1);
+
+// Ferme la connexion
+pg_close($connection);
+    
+
+?>

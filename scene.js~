@@ -1,0 +1,165 @@
+//-------------------- initialisation des variables ---------------------------------//
+
+var container, stats;
+var camera, scene, renderer, projector, control;
+var mouseX = 0, mouseY = 0;
+var windowHalfX = window.innerWidth / 2;
+var windowHalfY = window.innerHeight / 2;
+projector = new THREE.Projector();
+var intersects = [];
+var INTERSECTED ;
+
+init();
+//animate();
+
+//-------------------- fonction init() de three.js = initialisation de la scène ---------------------------------//
+
+function init() {
+
+	//----- bloc et position ------//
+		
+	container = document.createElement( 'div' );			//création d'un div 'container'
+	document.body.appendChild( container );				//ajout du div au body (index.php)
+
+	//----- Caméras ------//
+
+	camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );	//création d'un caméra
+	camera.position.z = 200;									//postition z de la caméra
+	camera.position.y = 100;									//position y de la caméra
+
+	//----- Contrôle de la caméra ------//
+
+	controls = new THREE.TrackballControls( camera );						//création de contrôles	(manière de manipuler la caméra)
+	controls.rotateSpeed = 1.0;									//vitesse de rotation
+	controls.zoomSpeed = 1.2;									//vitesse de zoom
+	controls.panSpeed = 0.8;									//vitesse de translation
+	controls.noZoom = false;									//autorisation de zoom
+	controls.noPan = false;										//autorisation translation
+	controls.staticMoving = true;									//
+	controls.dynamicDampingFactor = 0.3;								//
+
+	//----- Création de la scène ------//	
+			
+	scene = new THREE.Scene();					//nouvelle scène
+	scene.fog = new THREE.Fog( 0xffffff, 1, 5000 );			//ajout de brouillard
+	scene.fog.color.setHSL( 0.6, 0, 1 );				//couleur du brouillard 
+
+	//----- Lumières ------//
+
+	hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );		//nouvelle lumière hémisphérique
+	hemiLight.color.setHSL( 0.6, 1, 0.6 );						//couleur de la lumière
+	hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );					//couleur du fond
+	hemiLight.position.set( 0, 500, 0 );						//position de la lumière
+	scene.add( hemiLight );								//ajout de a lumière à la scène
+
+	var spotLight = new THREE.SpotLight( 0xffffff ); 				//ajout d'une lumière type SPOT
+	spotLight.position.set( 0, 100, 100); 						//position du spot
+	spotLight.castShadow = false; 							//pas d'ombres
+	spotLight.shadowMapWidth = 1024; 						
+	spotLight.shadowMapHeight = 1024; 
+	spotLight.shadowCameraNear = 200; 
+	spotLight.shadowCameraFar = 2000; 
+	spotLight.shadowCameraFov = 30; 
+	scene.add( spotLight );								//ajout de la caméra à la scène
+
+	//----- Affichage WebGL ------//
+				
+	renderer = new THREE.WebGLRenderer( { antialias: true } );			//création de l'affichage (=renderer)
+	renderer.setSize( window.innerWidth, window.innerHeight );			//mise à la bonne taille
+	container.appendChild( renderer.domElement );					//ajout de l'affichage à la page
+	renderer.setClearColor( scene.fog.color, 1 );					//en cas de rien à l'écran... 
+	renderer.gammaInput = true;							//activation du gamma de l'input
+	renderer.gammaOutput = true;							//activation du gamma de l'output
+	renderer.shadowMapEnabled = true;						//activation des ombres
+	renderer.shadowMapCullFace = THREE.CullFaceBack;				
+				
+	window.addEventListener( 'resize', onWindowResize, false );			//'surveilleur' de zoom chargé de redimmensionner la visualisation en fonction de la taille de la fenêtre
+
+	//----- Statistiques ------//
+
+	stats = new Stats();								//création de statistiques sur la scène
+	stats.domElement.style.position = 'absolute';					//position du module de stats
+	stats.domElement.style.top = '0px';						//collé au haut de la page
+	stats.domElement.style.zIndex = 100;						//zindex pour le mettre devant
+	container.appendChild( stats.domElement );					//ajout de l'icone stats à la page
+
+	//----- divers ------//
+				
+	document.addEventListener('mousemove', onMouseMove, false);			//'surveilleur' des mouvements de la souris
+	animate();									//déclenchement de la fonction animate()
+
+	//----- définition de la fonction animate ------//								
+				
+	function animate() {								//fonction qui gère l'animation (au mouvement de l'objet)	
+		requestAnimationFrame(animate);				
+		stats.update();
+		render();
+	}
+	
+	function render() {								//fonction qui gère le rendu utilisateur et génère la scène
+		controls.update();
+		renderer.render( scene, camera );
+	}
+}											//fin de la fonction init()
+
+
+	function onWindowResize() {							//fonction appelée lorsque la fenêtre est redimensionnée -> gère l'affichage
+		windowHalfX = window.innerWidth / 2;
+		windowHalfY = window.innerHeight / 2;
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		render();
+	}
+
+
+
+		
+function onMouseMove(event) {				//foncion déclenchée au mouvement de la souris 
+
+	mouseX = event.clientX;				//détection de la position en X de l'utilisateur en temps réel
+        mouseY = event.clientY;				//détection de la position en Y de l'utilisateur en temps réel
+
+	var vectorMouse = new THREE.Vector3();					//création d'un vecteur 3 dimensions 
+	vectorMouse.x = (event.clientX / window.innerWidth) * 2 - 1;		//coordonnées x du vecteur
+	vectorMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;		//coordonnées y du vecteur
+	vectorMouse.z = 0.5;							//coordonnées z du vecteur
+	
+	var raycaster = new THREE.Raycaster(camera.position, vectorMouse.sub(camera.position).normalize());	//céation d'un vecteur entre la position de la caméra et le curseur
+	var intersects = raycaster.intersectObjects( objects,true );						//création de la variable intersects qui contient les objets intersectés par le curseur de l'utilisateur
+
+	
+
+	event.preventDefault();
+	projector.unprojectVector(vectorMouse,camera);	    			//on "déprojette" l'objet 
+	
+	if ( intersects.length > 0 ) {						//détection des intersections (longueur positive)
+		console.log(intersects[ 0 ].object.parent.name);		
+		if ( INTERSECTED != intersects[ 0 ].object ) {			//si la variable INTERSECTED est différent du premier objet intersecté
+			if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+				INTERSECTED = intersects[ 0 ].object;
+				INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+				INTERSECTED.material.color.setHex( 0xffffff );
+				for (var i = 0; i < objects.length; i=i+1) {
+					if (  objects[i].name == intersects[ 0 ].object.parent.name ) {
+						var selection=objects[i].name;
+						document.getElementById("id").innerHTML = selection ;	
+						document.getElementById("champ_select").value = selection ;
+						document.getElementById("searchForm").onclick("SubmitForm()");
+					}	
+				}
+
+			} else {
+
+		if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+			INTERSECTED = null;
+		}
+	}
+}	
+		
+		
+
+
+			
+
+		

@@ -1,0 +1,23 @@
+CREATE TABLE chateau_0004
+(
+  NomID text NOT NULL,
+  Titre text,
+  Date_Cons integer,
+  Date_Fin_Cons integer,
+  Date_Des integer,
+  Description text,
+  Menu text,
+  CONSTRAINT chateau_0004_pkey PRIMARY KEY (NomID)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE chateau_0004
+  OWNER TO wfrn4733;
+
+
+INSERT INTO chateau_0004(
+            NomID, Titre, Date_Cons,Date_Fin_Cons, Date_Des, Description,Menu)
+    VALUES 
+('Remparts','Remparts du château',null,null,null,null,'Château'),
+('chateau','Château d''Engelbourg',null,null,null,null,'Château');

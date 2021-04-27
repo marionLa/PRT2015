@@ -1,0 +1,22 @@
+CREATE TABLE chateau_0006
+(
+  NomID text NOT NULL,
+  Titre text,
+  Date_Cons integer,
+  Date_Fin_Cons integer,
+  Date_Des integer,
+  Description text,
+  Menu text,
+  CONSTRAINT chateau_0006_pkey PRIMARY KEY (NomID)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE chateau_0006
+  OWNER TO wfrn4733;
+
+
+INSERT INTO chateau_0006(
+            NomID, Titre, Date_Cons,Date_Fin_Cons, Date_Des, Description,Menu)
+    VALUES 
+('chateauH','Château du Haut-Koenigsbourg',null,null,null,null,'Château');

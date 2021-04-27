@@ -1,0 +1,51 @@
+# Blender MTL File: 'None'
+# Material Count: 5
+
+newmtl M_0012_Bisque.002
+Ns 90.196078
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.457788 0.393538
+Ks 0.165000 0.165000 0.165000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Stone_Masonry_Multi.002
+Ns 90.196078
+Ka 0.000000 0.000000 0.000000
+Kd 0.365427 0.269051 0.242949
+Ks 0.165000 0.165000 0.165000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /chateau_tex/Stone_Masonry_Multi.jpg
+
+newmtl Vegetation_Grass_Artificial.002
+Ns 90.196078
+Ka 0.000000 0.000000 0.000000
+Kd 0.196769 0.281098 0.148581
+Ks 0.165000 0.165000 0.165000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /chateau_tex/Vegetation_Grass_Artificial.jpg
+
+newmtl Vegetation_Grass_Dry.002
+Ns 90.196078
+Ka 0.000000 0.000000 0.000000
+Kd 0.331294 0.250981 0.176690
+Ks 0.165000 0.165000 0.165000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /chateau_tex/Vegetation_Grass_Dry.jpg
+
+newmtl Vegetation_Grass_Fescue.002
+Ns 90.196078
+Ka 0.000000 0.000000 0.000000
+Kd 0.232910 0.297161 0.142557
+Ks 0.165000 0.165000 0.165000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /chateau_tex/Vegetation_Grass_Fescue.jpg

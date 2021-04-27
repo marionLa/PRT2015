@@ -1,0 +1,26 @@
+
+INSERT INTO cathedrale_0005(NomID, Titre, Date_Cons,Date_Fin_Cons, Date_Des, Description,Menu)
+VALUES 
+('beffroi','Beffroi',1383,1399,8888,null,'14e siècle'),
+('boutiques','Boutiques néogothiques Sud',1772,1775,8888,null,'18e siècle'),
+('cathedraleG','Cathédrale gothique',1200,null,8888,null,'Modèles'),
+('cathedraleO','Cathédrale Ottonienne',1000,null,8888,null,'Modèles'),
+('cathedraleR','Cathédrale Romane',1100,null,8888,null,'Modèles'),
+('chapelleC','Chapelle Ste Catherine',1341,1349,8888,null,'14e siècle'),
+('chapelleL','Chapelle St Laurent et boutiques Nord',1488,1521,8888,null,'15e siècle'),
+('fleche','Flèche gothique',1399,1435,8888,null,'14e siècle'),
+('maison','Maison des gardiens',1782,1782,8888,null,'18e siècle'),
+('massifOcc','Massif Occidentale',1277,1339,8888,null,'13e siècle'),
+('nefG','Nef gothique',1245,1275,8888,null,'13e siècle'),
+('nefR','Nef Romane',1015,null,1235,null,'11e siècle'),
+('sol','Sol',1,null,8888,null,'Modèles'),
+('tourC','Tour pyramidale et télégraphe Chappe',1760,null,1870,null,'18e siècle'),
+('tourK','Tour Koltz',1878,1992,8888,null,'19e siècle'),
+('tourMitre','Tour Mitre',1300,null,1759,null,'14e siècle'),
+('toursG','Tours gothiques',1340,null,8888,null,'14e siècle'),
+('toursO','Tours ottoniennes',1015,null,1048,null,'11e siècle'),
+('toursR','Tours romanes',1048,null,1235,null,'11e siècle'),
+('tourTrR','Tour romane du transept',1180,null,1300,null,'12e siècle'),
+('transeptO','Transept et abside ottonienne',1015,null,1190,null,'11e siècle'),
+('transeptR','Transept et Abside romane',1190,null,8888,null,'12e siècle');
+

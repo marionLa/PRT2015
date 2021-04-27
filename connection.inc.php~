@@ -1,0 +1,8 @@
+<?php
+$connection = pg_connect("host=localhost port=5432 dbname=PRT user=postgres password=23031991")
+     or die ("Nao consegui conectar ao PostGres --> " . pg_last_error($connection)); 
+
+
+
+
+?>

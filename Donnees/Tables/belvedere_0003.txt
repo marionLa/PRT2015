@@ -1,0 +1,22 @@
+CREATE TABLE belvedere_0003
+(
+  NomID text NOT NULL,
+  Titre text,
+  Date_Cons integer,
+  Date_Fin_Cons integer,
+  Date_Des integer,
+  Description text,
+  Menu text,
+  CONSTRAINT belvedere_0003_pkey PRIMARY KEY (NomID)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE belvedere_0003
+  OWNER TO postgres;
+
+
+INSERT INTO belvedere_0003(
+            NomID, Titre, Date_Cons,Date_Fin_Cons, Date_Des, Description,Menu)
+    VALUES 
+('belvedere','Belvédère des Trois Frontières',null,null,null,null,'Projet');

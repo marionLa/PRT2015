@@ -1,0 +1,23 @@
+CREATE TABLE eglise_0002
+(
+  NomID text NOT NULL,
+  Titre text,
+  Date_Cons integer,
+  Date_Fin_Cons integer,
+  Date_Des integer,
+  Description text,
+  Menu text,
+  CONSTRAINT eglise_0002_pkey PRIMARY KEY (NomID)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE eglise_0002
+  OWNER TO postgres;
+
+
+INSERT INTO eglise_0002(
+            NomID, Titre, Date_Cons,Date_Fin_Cons, Date_Des, Description,Menu)
+    VALUES 
+('egliseT','Eglise de Turckheim',1839,null,8888,null,'Eglise de Turckheim'),
+('clocherT','Clocher de l''église de Turckheim',1190,null,8888,null,'Eglise de Turckheim');
